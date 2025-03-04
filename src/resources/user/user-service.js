@@ -1,15 +1,15 @@
 const userRepository = require('./user-responsitory');
 const bcrypt = require('bcryptjs');
 
-const createUser = async (userData) => {
+const createUser = async (userData, profilePic) => {
     const hashPassword = await bcrypt.hash(userData.password, 10)
 
-    const profilePicturePath = profilePicture ? profilePicture.path : null;
+    const profilePicPath = profilePic ? profilePic.path : null;
 
     return await userRepository.createUser({
         ...userData,
         password: hashPassword,
-        profilePicture: profilePicturePath
+        profilePic: profilePicPath
     })
 }
 
