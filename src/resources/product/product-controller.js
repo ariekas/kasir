@@ -26,10 +26,10 @@ const updateProduct = async (req, res) => {
 
 const updateStock = async (req, res) => {
     const { productId } = req.params;
-    const { quantity, type } = req.body;
+    const { stock } = req.body;
 
     try {
-        const product = await productService.updateStock(productId, quantity, type);
+        const product = await productService.updateStock(productId, stock);
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }

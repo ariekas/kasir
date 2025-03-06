@@ -20,8 +20,8 @@ const deleteProduct = async (productId) => {
     return await productRepository.disable(productId)
 }
 
-const updateStock = async (productId, quantity, type) => {
-    return await productRepository.updateStock(productId, quantity, type)
+const updateStock = async (productId, stock) => {
+    return await productRepository.updateStock(productId, stock)
 }
 
 module.exports = {

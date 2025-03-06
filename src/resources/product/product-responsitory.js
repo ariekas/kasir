@@ -27,17 +27,13 @@ const disable = async (productId) => {
   });
 };
 
-const updateStock = async (productId, quantity, type) => {
-  const product = await findById(productId)
-  if (product) {
-    if (type === 'in') {
-      product.stock += quantity;
-    } else if (type === 'out') {
-      product.stock -= quantity;
-    }
-    return await product;
-  }
-}
+const updateStock = async (productId, stock) => {
+  return await prisma.product.update({
+      where: { id: productId },
+      data: { stock },
+  });
+};
+
 
 module.exports = {
   create,
