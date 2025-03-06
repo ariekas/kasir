@@ -11,6 +11,32 @@ const createUser = async (req, res) => {
     }
 }
 
+const getUser = async (req, res) => {
+    try {
+        const Datauser = await userService.getUser()
+        res.status(201).json({
+            message: "User found",
+            data: Datauser
+        }) 
+    } catch (error) {
+        
+    }
+}
+
+const getUserId = async (req, res) => {
+    const {userId} = req.params
+    try {
+        const user = await userService.getUser(userId)
+        res.status(201).json({
+            message: `user with id ${userId} found`,
+            data: user
+        })
+    } catch (error) {
+          res.status(401).json({
+            message: error.message
+          })  
+        }
+}
 
 const updateRole = async (req, res) => {
     const {userId} = req.params
@@ -46,5 +72,7 @@ const deleteUser = async (req, res) => {
 module.exports = {
     createUser,
     updateRole,
-    deleteUser
+    deleteUser,
+    getUser,
+    getUserId
 }
