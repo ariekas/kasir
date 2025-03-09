@@ -3,6 +3,7 @@ const express = require('express');
 const authController = require('./resources/auth/auth-controller');
 const userController = require('./resources/user/user-controller');
 const productController = require('./resources/product/product-controller');
+const categoryController = require('./resources/product/categorys/category-controller');
 const authMiddelware = require('./middlewares/authMiddelware');
 const upload = require('./middlewares/imageMiddelware')
 const app = express();
@@ -22,9 +23,12 @@ app.get('/user/:userId', authMiddelware.verifyToken, authMiddelware.verifyRole('
 app.post('/create/product', authMiddelware.verifyToken, authMiddelware.verifyRole('admin'), productController.createProduct);
 app.get('/products', productController.getProducts);
 app.get('/product/:productId', authMiddelware.verifyToken, authMiddelware.verifyRole('admin'), productController.getProductId);
-app.put('/update/:productId', authMiddelware.verifyToken, authMiddelware.verifyRole('admin'), productController.updateProduct);
-app.delete('/delete/:productId', authMiddelware.verifyToken, authMiddelware.verifyRole('admin'), productController.deleteProduct);
-app.post('/update/:productId/stock', authMiddelware.verifyToken, authMiddelware.verifyRole('admin'), productController.updateStock);
+// app.put('/update/:productId', authMiddelware.verifyToken, authMiddelware.verifyRole('admin'), productController.updateProduct);
+// app.delete('/delete/:productId', authMiddelware.verifyToken, authMiddelware.verifyRole('admin'), productController.deleteProduct);
+// app.post('/update/:productId/stock', authMiddelware.verifyToken, authMiddelware.verifyRole('admin'), productController.updateStock);
+
+app.post('/create/category', authMiddelware.verifyToken, authMiddelware.verifyRole('admin'), categoryController.createCategory);
+app.get('/categorys', categoryController.getCategorys);
 
 const PORT = process.env.PORT || 3000; 
 app.listen(PORT, () => {

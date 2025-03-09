@@ -12,20 +12,134 @@ model User {
   id        String   @id @default(cuid())
   username  String   @unique
   password  String
-  role      String 
+  role      String  // "admin", "kasir", "gudang"
   profilePic String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  reports Report[]
+
+  StockReport StockReport[]
 }
 
 model Product {
-  id          String    @id @default(cuid())
+  id          String     @id @default(cuid())
   name        String
-  description String?
   price       Float
-  category    String?
-  stock       Int       @default(0)
-  barcode     String?   @unique
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  stock       Int @default(0)
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  barcode     String?  @unique
+  expiredDate DateTime?
+  pajak       Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  discounts    Discount[]
+
+  TransactionItem TransactionItem[]
+  stockReports StockReport[]
 }
+
+model Category {
+  id        String      @id @default(cuid())
+  name      String
+  products  Product[]
+}
+
+model Discount {
+  id         String   @id @default(cuid())
+  productId  String   
+  product    Product  @relation(fields: [productId], references: [id])
+  name       String
+  percentage Float    
+  quota      Int      
+  used       Int 
+  startDate  DateTime 
+  endDate    DateTime 
+  createdAt  DateTime @default(now())
+
+  TransactionItem TransactionItem[]
+}
+
+model Member {
+  id          String   @id @default(cuid())
+  name        String  
+  phoneNumber String  @unique
+  expiredDate DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Transaction Transaction[]
+}
+
+model Transaction {
+  id         String   @id @default(cuid())
+  memberId   String?  
+  member     Member?  @relation(fields: [memberId], references: [id])
+  totalPrice Float
+  paymentId  String?
+  payment    Payment? @relation(fields: [paymentId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  transactionItems TransactionItem[]
+
+  ReportDetail ReportDetail[]
+}
+
+model TransactionItem {
+  id            String   @id @default(cuid())
+  transactionId String
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  productId     String
+  product       Product @relation(fields: [productId], references: [id])
+  quantity      Int
+
+  discountId    String?  
+  discount      Discount? @relation(fields: [discountId], references: [id])
+  
+  priceBeforeDiscount Float
+  priceAfterDiscount  Float
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  method    String  // "cash", "credit_card", "e_wallet"
+  createdAt DateTime @default(now())
+
+  Transaction Transaction[]
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User @relation(fields: [userId], references: [id])
+  reportDate  DateTime @default(now())
+  totalSales  Float
+  createdAt   DateTime @default(now())
+
+  reportDetails ReportDetail[]
+}
+
+model ReportDetail {
+  id         String   @id @default(cuid())
+  reportId   String
+  report     Report @relation(fields: [reportId], references: [id])
+  transactionId String
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+}
+
+model StockReport {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User @relation(fields: [userId], references: [id])
+  productId   String
+  product     Product @relation(fields: [productId], references: [id])
+  stockCount  Int
+  expiredCount Int?
+  createdAt   DateTime @default(now())
+}
+
+
+
+

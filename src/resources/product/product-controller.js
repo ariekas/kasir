@@ -1,56 +1,54 @@
+const { category } = require('../../config/db')
 const productService = require('./product-service')
 
 const createProduct = async (req, res) => {
     const productData = req.body
-    const product = await productService.createProduct(productData)
-    res.status(201).json(product)
+    try {
+        const product = await productService.createProduct(productData)
+        res.status(201).json({
+            message: 'Product created',
+            data: product
+        })
+    } catch (error) {
+        res.status(401).json({
+            message: error.message
+        })
+    }
 }
 
 const getProducts = async (req, res) => {
-    const products = await productService.getproducts()
-    res.status(200).json(products)
+    try {
+        const products = await productService.getProducts()
+        res.status(201).json({
+            message: 'Products found',
+           data:{
+            products,
+        }
+        })
+    } catch (error) {
+        res.status(401).json({
+            message: error.message
+        })
+    }
 }
 
 const getProductId = async (req, res) => {
     const {productId} = req.params
-    const product = await productService.getProductId(productId)
-    res.status(200).json(product)
-}
-
-const updateProduct = async (req, res) => {
-    const {productId} = req.params
-    const productData = req.body
-    const product = await productService.updateProduct(productId, productData)
-    res.status(200).json(product)
-}
-
-const updateStock = async (req, res) => {
-    const { productId } = req.params;
-    const { stock } = req.body;
-
     try {
-        const product = await productService.updateStock(productId, stock);
-        if (!product) {
-            return res.status(404).json({ message: "Product not found" });
-        }
-        res.status(200).json({ message: "Stock updated successfully", product });
+        const product = await productService.getProductId(productId)
+        res.status(201).json({
+            message: `Product with id ${productId} found`,
+            data: product
+        })
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error", error: error.message });
+        res.status(401).json({
+            message: error.message
+        })
     }
-};
-
-
-const deleteProduct = async (req, res) => {
-    const {productId} = req.params
-    const product = await productService.deleteProduct(productId)
-    res.status(200).json(product)
 }
 
 module.exports = {
     createProduct,
     getProducts,
-    getProductId,
-    updateProduct,
-    deleteProduct,
-    updateStock
+    getProductId
 }

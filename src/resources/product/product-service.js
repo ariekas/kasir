@@ -1,35 +1,23 @@
-const productRepository = require('./product-responsitory')
+const productResponsitory = require('./product-responsitory');
 
 const createProduct = async (productData) => {
-    return await productRepository.create(productData)
-}
+    return await productResponsitory.create(productData);
+};
 
-const getproducts = async () => {
-    return await productRepository.findAll()
-}
+const getProducts = async () => {
+    return await productResponsitory.findAll({
+        include: {
+            category: true,
+        },
+    });
+};
 
 const getProductId = async (productId) => {
-    return await productRepository.findById(productId)
-}
-
-const updateProduct = async (productId, productData) => {
-    return await productRepository.update(productId, productData)
-}
-
-const deleteProduct = async (productId) => {
-    return await productRepository.disable(productId)
-}
-
-const updateStock = async (productId, stock) => {
-    return await productRepository.updateStock(productId, stock)
-}
+    return await productResponsitory.findById(productId);
+};
 
 module.exports = {
     createProduct,
-    getproducts,
+    getProducts,
     getProductId,
-    updateProduct,
-    deleteProduct,
-    updateStock
-    
-}
+};
